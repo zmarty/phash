@@ -3,6 +3,7 @@
 using System;
 namespace Shipwreck.Phash.Imaging
 {
+	using EX = ImageExtensions;
 <#
 var types = new []
 {
@@ -103,11 +104,33 @@ foreach(var t in types)
 		}
 
         public <#= T #> Transpose()
+			=> (<#= T #>)GetAccessor().TransposeCore<<#= ET #>, <#= T #>Accessor>().Image;
+
+		private <#= T #>Accessor GetAccessor()
+			=> new <#= T #>Accessor(this);
+	}
+
+	internal struct <#= T #>Accessor : IImageAccessor<<#= ET #>>, IArrayImage<<#= ET #>>
+	{
+		public <#= T #>Accessor(<#= T #> image)
+		{
+			Image = image;
+		}
+		
+        public IImage<<#= ET #>> Image { get; }
+        <#= ET #>[] IArrayImage<<#= ET #>>.Array => ((IArrayImage<<#= ET #>>)Image).Array;
+
+        public int Width => Image.Width;
+        public int Height => Image.Height;
+
+        public <#= ET #> this[int x, int y]
         {
-            var r = new <#= T #>(_Height, _Width);
-            this.TransposeTo(r);
-            return r;
+            get => Image[x, y];
+            set => Image[x, y] = value;
         }
+		
+        public IImageAccessor<<#= ET #>> CreateNew(int width, int height)
+			=> new <#= T #>Accessor(new <#= T #>(width, height));
 	}
 <#
 }

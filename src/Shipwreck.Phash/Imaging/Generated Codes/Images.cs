@@ -1,6 +1,7 @@
 using System;
 namespace Shipwreck.Phash.Imaging
 {
+	using EX = ImageExtensions;
 	partial class FloatImage : IArrayImage<System.Single>
 	{
         private readonly int _Width;
@@ -79,11 +80,33 @@ namespace Shipwreck.Phash.Imaging
 		}
 
         public FloatImage Transpose()
+			=> (FloatImage)GetAccessor().TransposeCore<System.Single, FloatImageAccessor>().Image;
+
+		private FloatImageAccessor GetAccessor()
+			=> new FloatImageAccessor(this);
+	}
+
+	internal struct FloatImageAccessor : IImageAccessor<System.Single>, IArrayImage<System.Single>
+	{
+		public FloatImageAccessor(FloatImage image)
+		{
+			Image = image;
+		}
+		
+        public IImage<System.Single> Image { get; }
+        System.Single[] IArrayImage<System.Single>.Array => ((IArrayImage<System.Single>)Image).Array;
+
+        public int Width => Image.Width;
+        public int Height => Image.Height;
+
+        public System.Single this[int x, int y]
         {
-            var r = new FloatImage(_Height, _Width);
-            this.TransposeTo(r);
-            return r;
+            get => Image[x, y];
+            set => Image[x, y] = value;
         }
+		
+        public IImageAccessor<System.Single> CreateNew(int width, int height)
+			=> new FloatImageAccessor(new FloatImage(width, height));
 	}
 	partial class ByteImage : IArrayImage<System.Byte>
 	{
@@ -163,10 +186,32 @@ namespace Shipwreck.Phash.Imaging
 		}
 
         public ByteImage Transpose()
+			=> (ByteImage)GetAccessor().TransposeCore<System.Byte, ByteImageAccessor>().Image;
+
+		private ByteImageAccessor GetAccessor()
+			=> new ByteImageAccessor(this);
+	}
+
+	internal struct ByteImageAccessor : IImageAccessor<System.Byte>, IArrayImage<System.Byte>
+	{
+		public ByteImageAccessor(ByteImage image)
+		{
+			Image = image;
+		}
+		
+        public IImage<System.Byte> Image { get; }
+        System.Byte[] IArrayImage<System.Byte>.Array => ((IArrayImage<System.Byte>)Image).Array;
+
+        public int Width => Image.Width;
+        public int Height => Image.Height;
+
+        public System.Byte this[int x, int y]
         {
-            var r = new ByteImage(_Height, _Width);
-            this.TransposeTo(r);
-            return r;
+            get => Image[x, y];
+            set => Image[x, y] = value;
         }
+		
+        public IImageAccessor<System.Byte> CreateNew(int width, int height)
+			=> new ByteImageAccessor(new ByteImage(width, height));
 	}
 }
