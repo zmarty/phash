@@ -1,5 +1,6 @@
 <#@ template language="C#" debug="True" #>
 <#@ output extension="cs" #>
+<#@ import namespace="System.Collections.Generic" #>
 using System;
 namespace Shipwreck.Phash.Imaging
 {
@@ -10,7 +11,8 @@ var types = new []
 	new ImageType()
 	{
 		TypeName = "FloatImage",
-		ElementType = typeof(float)
+		ElementType = typeof(float),
+		SupportsReciprocal = true
 	},
 	new ImageType()
 	{
@@ -131,6 +133,32 @@ foreach(var t in types)
 
 		IImageOperator<<#= ET #>> IImageOperatorProvider<<#= ET #>>.GetOperator()
 			=> new ImageAccessorOperator<<#= ET #>, <#= T #>Accessor>(this);
+
+		#region Arithmetic Operators
+
+        public <#= ET #> Zero => 0;
+
+        public <#= ET #> One => 1;
+
+        public bool SupportsReciprocal => <#= t.SupportsReciprocal ? "true" : "false" #>;
+
+<#
+	foreach (var kv in new Dictionary<string, string>()
+	{
+		["Add"] = "+",
+		["Subtract"] = "-",
+		["Multiply"] = "*",
+		["Divide"] = "/"
+	})
+	{
+#>
+        public <#= ET #> <#= kv.Key #>(<#= ET #> left, <#= ET #> right)
+			=> (<#= ET #>)Math.Max(<#= ET #>.MinValue, Math.Min(left <#= kv.Value #> right, <#= ET #>.MaxValue));
+
+<#
+	}
+#>
+        #endregion Arithmetic Operators
 	}
 <#
 }
@@ -143,6 +171,8 @@ class ImageType
 	public string TypeName;
 	public System.Type ElementType;
 	public System.Type AdditiveType;
+	public bool SupportsReciprocal;
+
 }
 
 #>

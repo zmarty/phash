@@ -107,6 +107,28 @@ namespace Shipwreck.Phash.Imaging
 
 		IImageOperator<System.Single> IImageOperatorProvider<System.Single>.GetOperator()
 			=> new ImageAccessorOperator<System.Single, FloatImageAccessor>(this);
+
+		#region Arithmetic Operators
+
+        public System.Single Zero => 0;
+
+        public System.Single One => 1;
+
+        public bool SupportsReciprocal => true;
+
+        public System.Single Add(System.Single left, System.Single right)
+			=> (System.Single)Math.Max(System.Single.MinValue, Math.Min(left + right, System.Single.MaxValue));
+
+        public System.Single Subtract(System.Single left, System.Single right)
+			=> (System.Single)Math.Max(System.Single.MinValue, Math.Min(left - right, System.Single.MaxValue));
+
+        public System.Single Multiply(System.Single left, System.Single right)
+			=> (System.Single)Math.Max(System.Single.MinValue, Math.Min(left * right, System.Single.MaxValue));
+
+        public System.Single Divide(System.Single left, System.Single right)
+			=> (System.Single)Math.Max(System.Single.MinValue, Math.Min(left / right, System.Single.MaxValue));
+
+        #endregion Arithmetic Operators
 	}
 	partial class ByteImage : IArrayImage<System.Byte>, IImageOperatorProvider<System.Byte>
 	{
@@ -213,5 +235,27 @@ namespace Shipwreck.Phash.Imaging
 
 		IImageOperator<System.Byte> IImageOperatorProvider<System.Byte>.GetOperator()
 			=> new ImageAccessorOperator<System.Byte, ByteImageAccessor>(this);
+
+		#region Arithmetic Operators
+
+        public System.Byte Zero => 0;
+
+        public System.Byte One => 1;
+
+        public bool SupportsReciprocal => false;
+
+        public System.Byte Add(System.Byte left, System.Byte right)
+			=> (System.Byte)Math.Max(System.Byte.MinValue, Math.Min(left + right, System.Byte.MaxValue));
+
+        public System.Byte Subtract(System.Byte left, System.Byte right)
+			=> (System.Byte)Math.Max(System.Byte.MinValue, Math.Min(left - right, System.Byte.MaxValue));
+
+        public System.Byte Multiply(System.Byte left, System.Byte right)
+			=> (System.Byte)Math.Max(System.Byte.MinValue, Math.Min(left * right, System.Byte.MaxValue));
+
+        public System.Byte Divide(System.Byte left, System.Byte right)
+			=> (System.Byte)Math.Max(System.Byte.MinValue, Math.Min(left / right, System.Byte.MaxValue));
+
+        #endregion Arithmetic Operators
 	}
 }

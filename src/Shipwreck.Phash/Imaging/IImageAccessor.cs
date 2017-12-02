@@ -12,5 +12,23 @@ namespace Shipwreck.Phash.Imaging
         IImage<T> Image { get; }
 
         IImageAccessor<T> CreateNew(int width, int height);
+
+        #region Arithmetic Operators
+
+        T Zero { get; }
+
+        T One { get; }
+
+        bool SupportsReciprocal { get; }
+
+        T Add(T left, T right);
+
+        T Subtract(T left, T right);
+
+        T Multiply(T left, T right);
+
+        T Divide(T left, T right);
+
+        #endregion Arithmetic Operators
     }
 }
