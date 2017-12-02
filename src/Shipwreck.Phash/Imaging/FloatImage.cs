@@ -55,19 +55,7 @@ namespace Shipwreck.Phash.Imaging
 
         public static FloatImage operator /(FloatImage image, float divider)
             => image * (1 / divider);
-
-        public void MultiplyInplace(float coefficient)
-        {
-            for (var i = 0; i < _Data.Length; i++)
-            {
-                _Data[i] *= coefficient;
-            }
-        }
-
-        public void DivideInplace(float divider)
-            => MultiplyInplace(1 / divider);
-
-
+         
         public FloatImage Multiply(IImage<float> other)
         {
             var r = new FloatImage(_Width, _Height);

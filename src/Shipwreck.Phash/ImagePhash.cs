@@ -92,7 +92,7 @@ namespace Shipwreck.Phash
         {
             var blurred = image.Blur(sigma);
 
-            blurred.DivideInplace(blurred.Max());
+            blurred.DividedBy(blurred.Max());
             blurred.ApplyGamma(gamma);
 
             var projs = FindRadonProjections(blurred, numberOfAngles);

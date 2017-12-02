@@ -9,6 +9,18 @@ namespace Shipwreck.Phash.Imaging
     public interface IImageOperator<T>
         where T : struct, IEquatable<T>
     {
+        #region Arithmetic Operations
+
+        void AddedBy(T value);
+
+        void SubtractedBy(T value);
+
+        void MultipliedBy(T value);
+
+        void DividedBy(T value);
+
+        #endregion Arithmetic Operations
+
         IImage<T> Transpose();
     }
 }

@@ -13,6 +13,72 @@ namespace Shipwreck.Phash.Imaging
             _Image = image;
         }
 
+        #region Arithmetic Operations
+
+        public void AddedBy(TValue value)
+        {
+            var w = _Image.Width;
+            var h = _Image.Height;
+
+            for (var y = 0; y < h; y++)
+            {
+                for (var x = 0; x < w; x++)
+                {
+                    _Image[x, y] = _Image.Add(_Image[x, y], value);
+                }
+            }
+        }
+
+        public void SubtractedBy(TValue value)
+        {
+            var w = _Image.Width;
+            var h = _Image.Height;
+
+            for (var y = 0; y < h; y++)
+            {
+                for (var x = 0; x < w; x++)
+                {
+                    _Image[x, y] = _Image.Subtract(_Image[x, y], value);
+                }
+            }
+        }
+
+        public void MultipliedBy(TValue value)
+        {
+            var w = _Image.Width;
+            var h = _Image.Height;
+
+            for (var y = 0; y < h; y++)
+            {
+                for (var x = 0; x < w; x++)
+                {
+                    _Image[x, y] = _Image.Multiply(_Image[x, y], value);
+                }
+            }
+        }
+
+        public void DividedBy(TValue value)
+        {
+            if (_Image.SupportsReciprocal)
+            {
+                MultipliedBy(_Image.Divide(_Image.One, value));
+                return;
+            }
+
+            var w = _Image.Width;
+            var h = _Image.Height;
+
+            for (var y = 0; y < h; y++)
+            {
+                for (var x = 0; x < w; x++)
+                {
+                    _Image[x, y] = _Image.Divide(_Image[x, y], value);
+                }
+            }
+        }
+
+        #endregion Arithmetic Operations
+
         #region Transpose
 
         public IImage<TValue> Transpose()
