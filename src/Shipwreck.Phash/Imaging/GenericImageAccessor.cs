@@ -4,7 +4,7 @@ using E = System.Linq.Expressions.Expression;
 
 namespace Shipwreck.Phash.Imaging
 {
-    internal struct GenericImageAccessor<T> : IImageAccessor<T>
+    internal struct GenericImageAccessor<T> : IImageAccessor<T>, IArrayImage<T>
         where T : struct, IEquatable<T>
     {
         #region Initialize static fields
@@ -96,6 +96,8 @@ namespace Shipwreck.Phash.Imaging
 
         public int Width => Image.Width;
         public int Height => Image.Height;
+
+        T[] IArrayImage<T>.Array => (Image as IArrayImage<T>)?.Array;
 
         public T this[int x, int y]
         {

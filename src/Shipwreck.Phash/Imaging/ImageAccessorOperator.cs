@@ -13,17 +13,13 @@ namespace Shipwreck.Phash.Imaging
             _Image = image;
         }
 
+        #region Transpose
+
         public IImage<TValue> Transpose()
         {
             var w = _Image.Width;
             var h = _Image.Height;
-
-            var dest = (TAccessor)_Image.CreateNew(h, w);
-
-            if (dest.Height != w || dest.Width != h)
-            {
-                throw new ArgumentException();
-            }
+            var dest = _Image.CreateNew(h, w).GetAccessor();
 
             var sa = (_Image as IArrayImage<TValue>)?.Array;
             var da = (dest as IArrayImage<TValue>)?.Array;
@@ -41,16 +37,34 @@ namespace Shipwreck.Phash.Imaging
             }
             else
             {
-                for (var sy = 0; sy < h; sy++)
+                if (dest is TAccessor)
                 {
-                    for (var sx = 0; sx < w; sx++)
-                    {
-                        dest[sy, sx] = _Image[sx, sy];
-                    }
+                    TransposeCore((TAccessor)dest);
+                }
+                else
+                {
+                    TransposeCore(dest);
                 }
             }
 
             return dest;
         }
+
+        private void TransposeCore<TDest>(TDest dest)
+            where TDest : IImageAccessor<TValue>
+        {
+            var w = _Image.Width;
+            var h = _Image.Height;
+
+            for (var sy = 0; sy < h; sy++)
+            {
+                for (var sx = 0; sx < w; sx++)
+                {
+                    dest[sy, sx] = _Image[sx, sy];
+                }
+            }
+        }
+
+        #endregion Transpose
     }
 }
