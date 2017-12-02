@@ -68,7 +68,7 @@ namespace Shipwreck.Phash.Imaging
             => MultiplyInplace(1 / divider);
 
 
-        public FloatImage Multiply(FloatImage other)
+        public FloatImage Multiply(IImage<float> other)
         {
             var r = new FloatImage(_Width, _Height);
             for (var sy = 0; sy < _Height; sy++)

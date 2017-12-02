@@ -26,7 +26,7 @@ foreach(var t in types)
 	var ET = t.ElementType.FullName;
 	var AET = (t.AdditiveType ?? t.ElementType).FullName;
 #>
-	partial class <#= T #> : IArrayImage<<#= ET #>>
+	partial class <#= T #> : IArrayImage<<#= ET #>>, IImageOperatorProvider<<#= ET #>>
 	{
         private readonly int _Width;
         private readonly int _Height;
@@ -103,14 +103,11 @@ foreach(var t in types)
 			return r;
 		}
 
-        public <#= T #> Transpose()
-			=> (<#= T #>)GetAccessor().TransposeCore<<#= ET #>, <#= T #>Accessor>().Image;
-
-		private <#= T #>Accessor GetAccessor()
-			=> new <#= T #>Accessor(this);
+		IImageOperator<<#= ET #>> IImageOperatorProvider<<#= ET #>>.GetOperator()
+			=> new ImageAccessorOperator<<#= ET #>, <#= T #>Accessor>(new <#= T #>Accessor(this));
 	}
 
-	internal struct <#= T #>Accessor : IImageAccessor<<#= ET #>>, IArrayImage<<#= ET #>>
+	internal struct <#= T #>Accessor : IImageAccessor<<#= ET #>>, IArrayImage<<#= ET #>>, IImageOperatorProvider<<#= ET #>>
 	{
 		public <#= T #>Accessor(<#= T #> image)
 		{
@@ -131,6 +128,9 @@ foreach(var t in types)
 		
         public IImageAccessor<<#= ET #>> CreateNew(int width, int height)
 			=> new <#= T #>Accessor(new <#= T #>(width, height));
+
+		IImageOperator<<#= ET #>> IImageOperatorProvider<<#= ET #>>.GetOperator()
+			=> new ImageAccessorOperator<<#= ET #>, <#= T #>Accessor>(this);
 	}
 <#
 }

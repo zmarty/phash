@@ -2,7 +2,7 @@ using System;
 namespace Shipwreck.Phash.Imaging
 {
 	using EX = ImageExtensions;
-	partial class FloatImage : IArrayImage<System.Single>
+	partial class FloatImage : IArrayImage<System.Single>, IImageOperatorProvider<System.Single>
 	{
         private readonly int _Width;
         private readonly int _Height;
@@ -79,14 +79,11 @@ namespace Shipwreck.Phash.Imaging
 			return r;
 		}
 
-        public FloatImage Transpose()
-			=> (FloatImage)GetAccessor().TransposeCore<System.Single, FloatImageAccessor>().Image;
-
-		private FloatImageAccessor GetAccessor()
-			=> new FloatImageAccessor(this);
+		IImageOperator<System.Single> IImageOperatorProvider<System.Single>.GetOperator()
+			=> new ImageAccessorOperator<System.Single, FloatImageAccessor>(new FloatImageAccessor(this));
 	}
 
-	internal struct FloatImageAccessor : IImageAccessor<System.Single>, IArrayImage<System.Single>
+	internal struct FloatImageAccessor : IImageAccessor<System.Single>, IArrayImage<System.Single>, IImageOperatorProvider<System.Single>
 	{
 		public FloatImageAccessor(FloatImage image)
 		{
@@ -107,8 +104,11 @@ namespace Shipwreck.Phash.Imaging
 		
         public IImageAccessor<System.Single> CreateNew(int width, int height)
 			=> new FloatImageAccessor(new FloatImage(width, height));
+
+		IImageOperator<System.Single> IImageOperatorProvider<System.Single>.GetOperator()
+			=> new ImageAccessorOperator<System.Single, FloatImageAccessor>(this);
 	}
-	partial class ByteImage : IArrayImage<System.Byte>
+	partial class ByteImage : IArrayImage<System.Byte>, IImageOperatorProvider<System.Byte>
 	{
         private readonly int _Width;
         private readonly int _Height;
@@ -185,14 +185,11 @@ namespace Shipwreck.Phash.Imaging
 			return r;
 		}
 
-        public ByteImage Transpose()
-			=> (ByteImage)GetAccessor().TransposeCore<System.Byte, ByteImageAccessor>().Image;
-
-		private ByteImageAccessor GetAccessor()
-			=> new ByteImageAccessor(this);
+		IImageOperator<System.Byte> IImageOperatorProvider<System.Byte>.GetOperator()
+			=> new ImageAccessorOperator<System.Byte, ByteImageAccessor>(new ByteImageAccessor(this));
 	}
 
-	internal struct ByteImageAccessor : IImageAccessor<System.Byte>, IArrayImage<System.Byte>
+	internal struct ByteImageAccessor : IImageAccessor<System.Byte>, IArrayImage<System.Byte>, IImageOperatorProvider<System.Byte>
 	{
 		public ByteImageAccessor(ByteImage image)
 		{
@@ -213,5 +210,8 @@ namespace Shipwreck.Phash.Imaging
 		
         public IImageAccessor<System.Byte> CreateNew(int width, int height)
 			=> new ByteImageAccessor(new ByteImage(width, height));
+
+		IImageOperator<System.Byte> IImageOperatorProvider<System.Byte>.GetOperator()
+			=> new ImageAccessorOperator<System.Byte, ByteImageAccessor>(this);
 	}
 }
